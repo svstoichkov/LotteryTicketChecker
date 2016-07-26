@@ -50,7 +50,7 @@
             {
                 if (this.barcodeReader.Length != 0)
                 {
-                    ((MainWindow)this.AssociatedObject).HandleBarcode(this.barcodeReader.ToString());
+                    ((MainWindow)this.AssociatedObject).HandleBarcode(this.barcodeReader.ToString().Trim('L'));
                     this.barcodeReader.Clear();
                 }
 
