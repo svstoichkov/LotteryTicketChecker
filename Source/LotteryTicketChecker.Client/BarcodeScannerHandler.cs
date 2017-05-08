@@ -2,11 +2,8 @@
 {
     using System.Text;
     using System.Windows;
-    using System.Windows.Controls;
     using System.Windows.Input;
     using System.Windows.Interactivity;
-
-    using MaterialDesignThemes.Wpf;
 
     public class BarcodeScannerHandler : Behavior<Window>
     {
@@ -34,19 +31,12 @@
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
-            var startKey = Key.LeftCtrl;
-            var endKey = Key.LeftCtrl;
-#if DEBUG
-            startKey = Key.F11;
-            endKey = Key.F12;
-#endif
-
-            if (e.Key == startKey && !this.isScanning)
+            if ((e.Key == Key.F11 || e.Key == Key.F20) && !this.isScanning)
             {
                     this.isScanning = true;
                     e.Handled = true;
             }
-            else if (this.isScanning && e.Key == endKey)
+            else if ((e.Key == Key.F12 || e.Key == Key.F22) && this.isScanning)
             {
                 if (this.barcodeReader.Length != 0)
                 {
