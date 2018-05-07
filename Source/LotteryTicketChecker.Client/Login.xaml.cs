@@ -1,6 +1,7 @@
-﻿namespace LotteryTicketChecker.Client
+﻿namespace Client
 {
     using System;
+    using System.Threading;
     using System.Windows;
 
     using MaterialDesignThemes.Wpf;
@@ -9,9 +10,9 @@
 
     public partial class Login
     {
-        private readonly Checker checker;
+        private readonly LotteryTicketChecker checker;
 
-        public Login(Checker checker)
+        public Login(LotteryTicketChecker checker)
         {
             this.checker = checker;
             this.InitializeComponent();
@@ -26,15 +27,13 @@
 
             try
             {
-                var result = await this.checker.Login(this.tbEmail.Text, this.passwordBox.Password);
+                var result = await this.checker.LoginAsync(this.tbEmail.Text, this.passwordBox.Password, CancellationToken.None);
                 if (result)
                 {
                     Settings.Default.Username = this.tbEmail.Text;
                     Settings.Default.Password = this.passwordBox.Password;
                     Settings.Default.Save();
-
-                    this.checker.Start();
-
+                    
                     DialogHost.CloseDialogCommand.Execute(true, null);
                 }
                 else

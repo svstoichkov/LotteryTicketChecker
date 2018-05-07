@@ -1,20 +1,22 @@
-﻿namespace LotteryTicketChecker.Client
+﻿namespace Client
 {
     using System;
+    using System.Threading;
     using System.Windows;
-
+    
     using MaterialDesignThemes.Wpf;
 
     using Properties;
 
     public partial class MainWindow
     {
-        private readonly Checker checker;
+        private readonly LotteryTicketChecker checker;
 
         public MainWindow()
         {
             this.InitializeComponent();
-            this.checker = new Checker();
+            this.checker = new LotteryTicketChecker();
+            var handler = new BarcodeScannerHandler(this);
 
             if (string.IsNullOrWhiteSpace(Settings.Default.Username) || string.IsNullOrWhiteSpace(Settings.Default.Password))
             {
@@ -32,14 +34,13 @@
         {
             try
             {
-                var result = await this.checker.Login(Settings.Default.Username, Settings.Default.Password);
+                var result = await this.checker.LoginAsync(Settings.Default.Username, Settings.Default.Password, CancellationToken.None);
                 this.progress.Visibility = Visibility.Collapsed;
 
                 if (result)
                 {
                     this.tbResult.Text = "Успешен вход";
                     this.btnLogout.IsEnabled = true;
-                    this.checker.Start();
                 }
                 else
                 {
@@ -67,15 +68,15 @@
             {
                 this.tbResult.Text = string.Empty;
                 this.progress.Visibility = Visibility.Visible;
-                var result = await this.checker.Check(barcode);
+                var result = await this.checker.CheckAsync(barcode, CancellationToken.None);
                 this.tbResult.Text = result;
                 this.progress.Visibility = Visibility.Collapsed;
 
-                this.SwatResultColorZoneMode();
+                this.SwapResultColorZoneMode();
             }
         }
 
-        private void SwatResultColorZoneMode()
+        private void SwapResultColorZoneMode()
         {
             if (this.czResult.Mode == ColorZoneMode.PrimaryDark)
             {
