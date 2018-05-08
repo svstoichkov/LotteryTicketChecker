@@ -5,12 +5,12 @@
 
     public class BarcodeScannerHandler
     {
-        private readonly global::Client.MainWindow window;
+        private readonly MainWindow window;
         private readonly StringBuilder barcodeReader;
         private readonly KeyConverter keyConverter;
         private bool isScanning;
 
-        public BarcodeScannerHandler(global::Client.MainWindow window)
+        public BarcodeScannerHandler(MainWindow window)
         {
             this.window = window;
             this.barcodeReader = new StringBuilder();
@@ -21,12 +21,19 @@
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if ((e.Key == Key.F11 || e.Key == Key.F20) && !this.isScanning)
+            var startKey = Key.LeftCtrl;
+            var endKey = Key.LeftCtrl;
+//#if DEBUG
+//            startKey = Key.F11;
+//            endKey = Key.F12;
+//#endif
+
+            if (e.Key == startKey && !this.isScanning)
             {
                 this.isScanning = true;
                 e.Handled = true;
             }
-            else if ((e.Key == Key.F12 || e.Key == Key.F22) && this.isScanning)
+            else if (this.isScanning && e.Key == endKey)
             {
                 if (this.barcodeReader.Length != 0)
                 {
