@@ -68,8 +68,16 @@
             {
                 this.tbResult.Text = string.Empty;
                 this.progress.Visibility = Visibility.Visible;
-                var result = await this.checker.CheckAsync(barcode, CancellationToken.None);
-                this.tbResult.Text = result;
+
+                try
+                {
+                    this.tbResult.Text = await this.checker.CheckAsync(barcode, CancellationToken.None);
+                }
+                catch (Exception e)
+                {
+                    this.tbResult.Text = "Грешка";
+                }
+
                 this.progress.Visibility = Visibility.Collapsed;
 
                 this.SwapResultColorZoneMode();
